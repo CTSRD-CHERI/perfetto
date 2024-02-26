@@ -47,7 +47,7 @@ SyscallTable::SyscallTable(Architecture arch) {
 }
 
 Architecture SyscallTable::ArchFromString(base::StringView machine) {
-  if (machine == "aarch64") {
+  if (machine == "aarch64" || machine == "arm64") {
     return Architecture::kArm64;
   } else if (machine == "armv8l" || machine == "armv7l") {
     // armv8l is a 32 bit userspace process on a 64 bit kernel
