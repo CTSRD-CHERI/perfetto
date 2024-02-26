@@ -1091,7 +1091,10 @@ void UnixSocket::ReadPeerCredentialsPosix() {
   int res = getsockopt(sock_raw_.fd(), 0, LOCAL_PEERCRED, &user_cred, &len);
   PERFETTO_CHECK(res == 0 && user_cred.cr_version == XUCRED_VERSION);
   peer_uid_ = static_cast<uid_t>(user_cred.cr_uid);
-  // There is no pid in the LOCAL_PEERCREDS for MacOS / FreeBSD.
+  // There is no pid in the LOCAL_PEERCREDS for MacOS
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_BSD)
+  peer_pid_ = user_cred.cr_pid;
+#endif
 #endif
 }
 #endif  // !OS_WIN
