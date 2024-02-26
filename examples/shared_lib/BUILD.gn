@@ -23,6 +23,9 @@ executable("example_shlib_data_source") {
     "../../src/shared_lib:libperfetto_c",
   ]
   sources = [ "example_shlib_data_source.c" ]
+  if (is_bsd) {
+    libs = [ "stdthreads" ]
+  }
 }
 
 executable("example_shlib_track_event") {
