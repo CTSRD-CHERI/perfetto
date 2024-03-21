@@ -32,7 +32,11 @@
 
 namespace perfetto::trace_processor {
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+struct alignas(max_align_t) InlineSchedSwitch {
+#else // defined(__CHERI_PURE_CAPABILITY__)
 struct alignas(8) InlineSchedSwitch {
+#endif // defined(__CHERI_PURE_CAPABILITY__)
   int64_t prev_state;
   int32_t next_pid;
   int32_t next_prio;
@@ -44,7 +48,11 @@ static_assert(sizeof(InlineSchedSwitch) == 24);
 // data in trace processor that this struct is as small as possible.
 static_assert(sizeof(InlineSchedSwitch) == 24);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+struct alignas(max_align_t) InlineSchedWaking {
+#else // defined(__CHERI_PURE_CAPABILITY__)
 struct alignas(8) InlineSchedWaking {
+#endif // defined(__CHERI_PURE_CAPABILITY__)
   int32_t pid;
   uint16_t target_cpu;
   uint16_t prio;
@@ -56,7 +64,12 @@ struct alignas(8) InlineSchedWaking {
 // data in trace processor that this struct is as small as possible.
 static_assert(sizeof(InlineSchedWaking) == 16);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+struct alignas(max_align_t) JsonEvent {
+#else // defined(__CHERI_PURE_CAPABILITY__)
 struct alignas(8) JsonEvent {
+#endif // defined(__CHERI_PURE_CAPABILITY__)
+  std::string value;
   int64_t dur = std::numeric_limits<int64_t>::max();
 
   uint32_t pid = 0;
