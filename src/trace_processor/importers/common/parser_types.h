@@ -32,11 +32,7 @@
 
 namespace perfetto::trace_processor {
 
-#if defined(__CHERI_PURE_CAPABILITY__)
-struct alignas(max_align_t) InlineSchedSwitch {
-#else // defined(__CHERI_PURE_CAPABILITY__)
 struct alignas(8) InlineSchedSwitch {
-#endif // defined(__CHERI_PURE_CAPABILITY__)
   int64_t prev_state;
   int32_t next_pid;
   int32_t next_prio;
@@ -48,11 +44,7 @@ static_assert(sizeof(InlineSchedSwitch) == 24);
 // data in trace processor that this struct is as small as possible.
 static_assert(sizeof(InlineSchedSwitch) == 24);
 
-#if defined(__CHERI_PURE_CAPABILITY__)
-struct alignas(max_align_t) InlineSchedWaking {
-#else // defined(__CHERI_PURE_CAPABILITY__)
 struct alignas(8) InlineSchedWaking {
-#endif // defined(__CHERI_PURE_CAPABILITY__)
   int32_t pid;
   uint16_t target_cpu;
   uint16_t prio;
@@ -145,13 +137,25 @@ struct alignas(8) JsonEvent {
 };
 static_assert(sizeof(JsonEvent) % 8 == 0);
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+struct alignas(max_align_t) TracePacketData {
+#else
 struct alignas(8) TracePacketData {
+#endif
   TraceBlobView packet;
   RefPtr<PacketSequenceStateGeneration> sequence_state;
 };
+#if defined(__CHERI_PURE_CAPABILITY__)
+static_assert(sizeof(TracePacketData) % alignof(max_align_t) == 0);
+#else
 static_assert(sizeof(TracePacketData) % 8 == 0);
+#endif
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+struct alignas(max_align_t) TrackEventData {
+#else
 struct alignas(8) TrackEventData {
+#endif
   TrackEventData(TraceBlobView pv,
                  RefPtr<PacketSequenceStateGeneration> generation)
       : trace_packet_data{std::move(pv), std::move(generation)} {}
@@ -175,15 +179,27 @@ struct alignas(8) TrackEventData {
   double counter_value = 0;
   std::array<double, kMaxNumExtraCounters> extra_counter_values = {};
 };
+#if defined(__CHERI_PURE_CAPABILITY__)
+static_assert(sizeof(TracePacketData) % alignof(max_align_t) == 0);
+#else
 static_assert(sizeof(TracePacketData) % 8 == 0);
+#endif
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+struct alignas(max_align_t) LegacyV8CpuProfileEvent {
+#else
 struct alignas(8) LegacyV8CpuProfileEvent {
+#endif
   uint64_t session_id;
   uint32_t pid;
   uint32_t tid;
   uint32_t callsite_id;
 };
+#if defined(__CHERI_PURE_CAPABILITY__)
+static_assert(sizeof(LegacyV8CpuProfileEvent) % alignof(max_align_t) == 0);
+#else
 static_assert(sizeof(LegacyV8CpuProfileEvent) % 8 == 0);
+#endif
 
 }  // namespace perfetto::trace_processor
 
