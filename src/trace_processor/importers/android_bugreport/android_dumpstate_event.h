@@ -26,7 +26,11 @@
 
 namespace perfetto ::trace_processor {
 
+#if defined(__CHERI_PURE_CAPABILITY__)
+struct alignas(max_align_t) AndroidDumpstateEvent {
+#else
 struct alignas(8) AndroidDumpstateEvent {
+#endif
   enum class EventType : int32_t {
     kNull,
     // A battery stats history event, given in the checkin format.
