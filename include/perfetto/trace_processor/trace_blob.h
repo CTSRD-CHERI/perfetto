@@ -76,16 +76,10 @@ class PERFETTO_EXPORT_COMPONENT TraceBlob : public RefCounted {
 
   TraceBlob(Ownership ownership, uint8_t* data, size_t size);
 
+  uint8_t* data_ = nullptr;
+  std::unique_ptr<base::ScopedMmap> mapping_;
+  size_t size_ = 0;
   Ownership ownership_ = Ownership::kNullOrMmapped;
-#if defined(__CHERI_PURE_CAPABILITY__)
-  uint8_t* data_ = nullptr;
-  std::unique_ptr<base::ScopedMmap> mapping_;
-  size_t size_ = 0;
-#else
-  uint8_t* data_ = nullptr;
-  size_t size_ = 0;
-  std::unique_ptr<base::ScopedMmap> mapping_;
-#endif
 };
 
 }  // namespace trace_processor

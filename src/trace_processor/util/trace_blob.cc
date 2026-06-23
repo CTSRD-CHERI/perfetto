@@ -86,7 +86,7 @@ TraceBlob TraceBlob::FromMmap(void* data, size_t size) {
 }
 
 TraceBlob::TraceBlob(Ownership ownership, uint8_t* data, size_t size)
-    : ownership_(ownership), data_(data), size_(size) {}
+    : data_(data), size_(size), ownership_(ownership) {}
 
 TraceBlob::~TraceBlob() {
   switch (ownership_) {
